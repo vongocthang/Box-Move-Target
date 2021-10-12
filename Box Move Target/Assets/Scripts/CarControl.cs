@@ -5,9 +5,11 @@ using UnityEngine;
 public class CarControl : MonoBehaviour
 {
     public Rigidbody2D rb2D;
-    public Vector3 forceLeft;
-    public Vector3 forceRight;
-    public float speed;
+    public float moveSpeed;
+    public float rotateSpeed;
+
+    public GameObject wheel1;
+    public GameObject wheel2;
 
     public bool moveLeft;
     public bool moveRight;
@@ -22,7 +24,6 @@ public class CarControl : MonoBehaviour
     void Update()
     {
         Move();
-        NotMove();
     }
 
     public void MoveLeft()
@@ -35,28 +36,27 @@ public class CarControl : MonoBehaviour
         moveRight = true;
     }
 
+    public void NotMove()
+    {
+        moveLeft = false;
+        moveRight = false;
+    }
+
     public void Move()
     {
         if (moveLeft == true)
         {
-            rb2D.velocity =new Vector2(-speed * Time.deltaTime, 0f);
+            
+            rb2D.velocity = new Vector2(-moveSpeed * Time.deltaTime, 0f);
+            wheel1.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
+            wheel2.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
         }
         if (moveRight == true)
         {
             
-            rb2D.velocity = new Vector2(speed * Time.deltaTime, 0f);
-        }
-    }
-
-    public void NotMove()
-    {
-        if (moveLeft == true || moveRight == true)
-        {
-            if (Input.GetMouseButtonUp(0))
-            {
-                moveLeft = false;
-                moveRight = false;
-            }
+            rb2D.velocity = new Vector2(moveSpeed * Time.deltaTime, 0f);
+            wheel1.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
+            wheel2.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
         }
     }
 }
