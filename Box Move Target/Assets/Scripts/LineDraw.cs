@@ -11,39 +11,41 @@ public class LineDraw : MonoBehaviour
     public float linePointMinDistance;
     public float lineWidth;
 
+    public LayerMask cantDrawOverLayer;
+    int cantDrawOverLayerIndex;
+
     Line currentLine;
 
     Camera cam;
+
+    public Rigidbody2D boxRb;
+    public Rigidbody2D carRb;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+
+        cantDrawOverLayerIndex = LayerMask.NameToLayer("CantDrawOver");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0)
+        if (Input.GetMouseButtonDown(0))
         {
             BeginDraw();
         }
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    BeginDraw();
-        //}
         if (currentLine != null)
         {
             Draw();
         }
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    EndDraw();
-        //}
-        if (Input.touchCount == 0)
+        if (Input.GetMouseButtonUp(0))
         {
             EndDraw();
         }
+
+        //StopDrawLine();
         
     }
 
@@ -59,10 +61,17 @@ public class LineDraw : MonoBehaviour
 
     public void Draw()
     {
-        Vector2 touchPos = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
-        currentLine.AddPoints(touchPos);
-        //Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        //currentLine.AddPoints(mousePos);
+        Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        
+        RaycastHit2D hit = Physics2D.CircleCast(mousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
+        if (hit)
+        {
+            EndDraw();
+        }
+        else
+        {
+            currentLine.AddPoints(mousePos);
+        }
     }
 
     public void EndDraw()
@@ -76,9 +85,30 @@ public class LineDraw : MonoBehaviour
             }
             else
             {
+                currentLine.gameObject.layer = cantDrawOverLayerIndex;
                 currentLine.UsePhysics(true);
                 currentLine = null;
             }
         }
     }
+
+    //public void StopDrawLine()
+    //{
+    //    if (Input.GetMouseButton(0))
+    //    {
+    //        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
+
+    //        if (hit.collider.tag == "Box" || hit.collider.tag == "Player" || hit.collider.tag == "Tilemap")
+    //        {
+    //            Debug.Log("Stop Draw Line");
+
+    //            stopDraw = true;
+    //        }
+    //        if (hit.point == null)
+    //        {
+    //            stopDraw = false;
+    //        }
+    //    }
+    //}
 }

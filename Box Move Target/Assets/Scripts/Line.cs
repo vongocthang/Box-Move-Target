@@ -12,6 +12,10 @@ public class Line : MonoBehaviour
     public int pointsCount = 0;
 
     float pointsMinDistance = 0.1f;
+    //public bool stopDraw;
+
+    public CircleCollider2D circleCollider;
+    float circleColliderRadius;
 
     public void AddPoints(Vector2 newPoint)
     {
@@ -22,6 +26,10 @@ public class Line : MonoBehaviour
 
         points.Add(newPoint);
         pointsCount++;
+
+        circleCollider = gameObject.AddComponent<CircleCollider2D>();
+        circleCollider.offset = newPoint;
+        circleCollider.radius = circleColliderRadius;
 
         lineRenderer.positionCount = pointsCount;
         lineRenderer.SetPosition(pointsCount - 1, newPoint);
@@ -57,6 +65,19 @@ public class Line : MonoBehaviour
         lineRenderer.startWidth = width;
         lineRenderer.endWidth = width;
 
+        circleColliderRadius = width / 2f;
+
         edgeCollider.edgeRadius = width / 2f;
     }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.tag != "Target")
+    //    {
+    //        circleCollider.isTrigger = false;
+    //        Debug.Log("Va cham" + collision.name);
+    //    }
+    //}
+
+
 }

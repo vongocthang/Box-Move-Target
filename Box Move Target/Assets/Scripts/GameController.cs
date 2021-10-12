@@ -6,8 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public Win win;
-    public TMP_Text winGame;
+    public Target target;
+    public GameObject winGame;
+    public TMP_Text countTime;
+
+    public float threeSecond = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -18,19 +21,52 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        WinGame();
+        CountTimeWin();
     }
 
     public void WinGame()
     {
-        if (win.winGame == true)
+        if (threeSecond >= 3)
         {
-            winGame.enabled = true;
+            StartCoroutine(DisabledCountTime());
+            winGame.SetActive(true);
+            target.beginCountTime = false;
         }
+        
     }
 
     public void Reset()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    //Đếm thời gian
+    public void CountTimeWin()
+    {
+        if (target.beginCountTime == true)
+        {
+            countTime.enabled = true;
+
+            if (Time.time > target.timeLine + threeSecond + 1)
+            {
+                threeSecond++;
+                countTime.text = threeSecond.ToString();
+            }  
+        }
+
+        if (target.beginCountTime == false)
+        {
+            countTime.text = 0.ToString();
+            threeSecond = 0;
+            countTime.enabled = false;
+        }
+    }
+
+    IEnumerator DisabledCountTime()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        countTime.enabled = false;
     }
 }
