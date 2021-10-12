@@ -6,7 +6,7 @@ public class LineDraw : MonoBehaviour
 {
     public GameObject linePrefab;
 
-    [Space(30f)]
+    //[Space(30f)]
     public Gradient lineColor;
     public float linePointMinDistance;
     public float lineWidth;
@@ -24,15 +24,23 @@ public class LineDraw : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(Input.touchCount > 0)
         {
             BeginDraw();
         }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    BeginDraw();
+        //}
         if (currentLine != null)
         {
             Draw();
         }
-        if (Input.GetMouseButtonUp(0))
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    EndDraw();
+        //}
+        if (Input.touchCount == 0)
         {
             EndDraw();
         }
@@ -51,8 +59,10 @@ public class LineDraw : MonoBehaviour
 
     public void Draw()
     {
-        Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        currentLine.AddPoints(mousePos);
+        Vector2 touchPos = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
+        currentLine.AddPoints(touchPos);
+        //Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //currentLine.AddPoints(mousePos);
     }
 
     public void EndDraw()
