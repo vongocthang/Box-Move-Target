@@ -6,10 +6,7 @@ public class CarControl : MonoBehaviour
 {
     public Rigidbody2D rb2D;
     public float moveSpeed;
-    public float rotateSpeed;
-
-    public GameObject wheel1;
-    public GameObject wheel2;
+    public float tempMoveSpeed;
 
     public bool moveLeft;
     public bool moveRight;
@@ -40,23 +37,28 @@ public class CarControl : MonoBehaviour
     {
         moveLeft = false;
         moveRight = false;
+        tempMoveSpeed = 0;
     }
 
     public void Move()
     {
         if (moveLeft == true)
         {
-            
-            rb2D.velocity = new Vector2(-moveSpeed * Time.deltaTime, 0f);
-            wheel1.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
-            wheel2.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
+            //Tốc độ tăng dần
+            if (Mathf.Abs(tempMoveSpeed) < moveSpeed)
+            {
+                tempMoveSpeed -= 2;
+            }
+            rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
         }
         if (moveRight == true)
         {
-            
-            rb2D.velocity = new Vector2(moveSpeed * Time.deltaTime, 0f);
-            wheel1.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
-            wheel2.transform.Rotate(Vector3.forward * Time.deltaTime * rotateSpeed);
+            //Tốc độ tăng dần
+            if (Mathf.Abs(tempMoveSpeed) < moveSpeed)
+            {
+                tempMoveSpeed += 2;
+            }
+            rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
         }
     }
 }

@@ -18,9 +18,6 @@ public class LineDraw : MonoBehaviour
 
     Camera cam;
 
-    public Rigidbody2D boxRb;
-    public Rigidbody2D carRb;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -91,24 +88,4 @@ public class LineDraw : MonoBehaviour
             }
         }
     }
-
-    //public void StopDrawLine()
-    //{
-    //    if (Input.GetMouseButton(0))
-    //    {
-    //        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-    //        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-
-    //        if (hit.collider.tag == "Box" || hit.collider.tag == "Player" || hit.collider.tag == "Tilemap")
-    //        {
-    //            Debug.Log("Stop Draw Line");
-
-    //            stopDraw = true;
-    //        }
-    //        if (hit.point == null)
-    //        {
-    //            stopDraw = false;
-    //        }
-    //    }
-    //}
 }

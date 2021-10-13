@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class GameController : MonoBehaviour
+public class BasicModeGC : MonoBehaviour
 {
     public Target target;
     public GameObject winGame;
@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,15 +30,8 @@ public class GameController : MonoBehaviour
         if (threeSecond >= 3)
         {
             StartCoroutine(DisabledCountTime());
-            winGame.SetActive(true);
-            target.beginCountTime = false;
         }
-        
-    }
 
-    public void Reset()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     //Đếm thời gian
@@ -52,7 +45,7 @@ public class GameController : MonoBehaviour
             {
                 threeSecond++;
                 countTime.text = threeSecond.ToString();
-            }  
+            }
         }
 
         if (target.beginCountTime == false)
@@ -67,6 +60,7 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        countTime.enabled = false;
+        winGame.SetActive(true);
+        target.beginCountTime = false;
     }
 }

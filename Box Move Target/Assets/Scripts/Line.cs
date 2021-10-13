@@ -12,7 +12,6 @@ public class Line : MonoBehaviour
     public int pointsCount = 0;
 
     float pointsMinDistance = 0.1f;
-    //public bool stopDraw;
 
     public CircleCollider2D circleCollider;
     float circleColliderRadius;
