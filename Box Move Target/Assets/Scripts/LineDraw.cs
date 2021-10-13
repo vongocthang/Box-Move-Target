@@ -41,9 +41,6 @@ public class LineDraw : MonoBehaviour
         {
             EndDraw();
         }
-
-        //StopDrawLine();
-        
     }
 
     public void BeginDraw()
@@ -63,7 +60,7 @@ public class LineDraw : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
         if (hit)
         {
-            EndDraw();
+            //EndDraw();
         }
         else
         {
