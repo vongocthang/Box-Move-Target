@@ -32,6 +32,7 @@ public class Line : MonoBehaviour
 
         lineRenderer.positionCount = pointsCount;
         lineRenderer.SetPosition(pointsCount - 1, newPoint);
+        //Debug.Log(lineRenderer.positionCount);
 
         if (pointsCount > 1)
         {
@@ -68,15 +69,4 @@ public class Line : MonoBehaviour
 
         edgeCollider.edgeRadius = width / 2f;
     }
-
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.tag != "Target")
-    //    {
-    //        circleCollider.isTrigger = false;
-    //        Debug.Log("Va cham" + collision.name);
-    //    }
-    //}
-
-
 }
