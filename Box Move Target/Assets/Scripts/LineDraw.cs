@@ -5,9 +5,10 @@ using UnityEngine;
 public class LineDraw : MonoBehaviour
 {
     public GameObject linePrefab;
+    public GameObject tempLinePrefab;
 
     //[Space(30f)]
-    public Gradient lineColor;
+    public Gradient lineColor, lineColor2;
     public float linePointMinDistance;
     public float lineWidth;
 
@@ -15,12 +16,13 @@ public class LineDraw : MonoBehaviour
     int cantDrawOverLayerIndex;//Gán Line vừa vẽ thành bị chặn
 
     Line currentLine;
+    Line tempLine;
 
     public Vector2 mousePos;
-    public Vector2 lastPoint;
-    public bool drawBlocked;
-    //public Vector2 centerPos;//Điểm chính giữa của điểm bị chặn và điểm thoát ra
-    //public Vector2 mousePos2;
+    public Vector2 lastPoint;//Điểm đc vẽ cuối cùng trước khi bị chặn
+    public bool beingBlocked;//Đang trong trạng thái bị chặn
+    
+    
 
     Camera cam;
 
@@ -46,12 +48,15 @@ public class LineDraw : MonoBehaviour
         if (currentLine != null)
         {
             Draw();
-            Debug.Log("dang ve");
+            //Debug.Log("dang ve");
         }
         if (Input.GetMouseButtonUp(0))
         {
             EndDraw();
         }
+
+
+        TestAll();
     }
 
     public void BeginDraw()
@@ -64,61 +69,49 @@ public class LineDraw : MonoBehaviour
         currentLine.SetLineWidth(lineWidth);
     }
 
+    //Xác định con trỏ thoát khỏi bị chặn ở vị trí thỏa mãn để nối line không xuyên qua đối tượng chặn
     public void NotPenetrate()
     {
-        //Method draw line đc kích hoạt khi thoát khỏi bị chặn (đã bị chặn trước đó)
-        //if (drawBlocked == true)
+        //Method draw line đc kích hoạt khi thoát khỏi bị chặn(đã bị chặn trước đó)
+        //if (beingBlocked == true)
         //{
-        //    //mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //    Vector2 blockedExitPos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        //    //Điều kiện để Line đc nối lại - Line k đc đi xuyên qua đối tượng Blocked
-        //    if (Mathf.Abs(mousePos.x - lastPoint.x) <= differenceDistance || Mathf.Abs(mousePos.y - lastPoint.y) <= differenceDistance)
+        //    float tempX = (blockedExitPos.x + lastPoint.x) / 2;
+        //    float tempY = (blockedExitPos.y + lastPoint.y) / 2;
+
+        //    Vector2 tempMousePos = new Vector2(tempX, tempY);
+        //    testPosition.transform.position = tempMousePos;
+
+        //    RaycastHit2D hit2 = Physics2D.CircleCast(tempMousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
+        //    if (hit2)
         //    {
-        //        //mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //        Debug.Log("khong the xuyen qua");
+        //    }
+        //    else
+        //    {
+        //        currentLine.AddPoints(mousePos);
 
-        //        float tempX = (mousePos.x + lastPoint.x) / 2;
-        //        float tempY = (mousePos.y + lastPoint.y) / 2;
-
-        //        Vector2 tempMousePos = new Vector2(tempX, tempY);
-        //        testPosition.transform.position = tempMousePos;
-
-        //        RaycastHit2D hit2 = Physics2D.CircleCast(tempMousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
-        //        if (hit2)
-        //        {
-        //            drawBlocked = true;
-        //            Debug.Log("khong the xuyen qua");
-        //        }
-        //        else
-        //        {
-        //            currentLine.AddPoints(mousePos);
-        //        }
         //    }
         //}
+        //else
+        //{
+        //    currentLine.AddPoints(mousePos);
+        //}
 
-        //Method draw line đc kích hoạt khi thoát khỏi bị chặn(đã bị chặn trước đó)
-        if (drawBlocked == true)
+        if (beingBlocked == true)
         {
-            float tempX = (mousePos.x + lastPoint.x) / 2;
-            float tempY = (mousePos.y + lastPoint.y) / 2;
+            //////////
+            tempLine = Instantiate(tempLinePrefab, lastPoint, this.transform.rotation).GetComponent<Line>();
 
-            Vector2 tempMousePos = new Vector2(tempX, tempY);
-            testPosition.transform.position = tempMousePos;
+            tempLine.UsePhysics(false);
+            tempLine.SetLineColor(lineColor2);
+            tempLine.SetPointMinDistance(linePointMinDistance);
+            tempLine.SetLineWidth(lineWidth);
 
-            RaycastHit2D hit2 = Physics2D.CircleCast(tempMousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
-            if (hit2)
-            {
-                Debug.Log("khong the xuyen qua");
-            }
-            else
-            {
-                currentLine.AddPoints(mousePos);
-                drawBlocked = false;
-            }
-        }
+            tempLine.AddPoints(mousePos);
 
-        else
-        {
-            currentLine.AddPoints(mousePos);
+            beingBlocked = false;
         }
 
     }
@@ -126,19 +119,24 @@ public class LineDraw : MonoBehaviour
     public void Draw()
     {
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        if (beingBlocked == true)
+        {
+            //Debug.Log(mousePos);
+        }
         
-
-        RaycastHit2D hit = Physics2D.CircleCast(mousePos, lineWidth / 3, Vector2.zero, 1f, cantDrawOverLayer);
+        RaycastHit2D hit = Physics2D.CircleCast(mousePos, lineWidth / 3, Vector2.zero, 0.1f, cantDrawOverLayer);
 
         if (hit)
         {
-            drawBlocked = true;
+            beingBlocked = true;
             lastPoint = currentLine.lineRenderer.GetPosition(currentLine.pointsCount - 1);
-            Debug.Log("bi chan vi tri: " + lastPoint);
+            //Debug.Log("bi chan vi tri: " + lastPoint);
         }
         else
         {
             NotPenetrate();
+            //currentLine.AddPoints(mousePos);
+            beingBlocked = false;
         }
     }
 
@@ -159,4 +157,21 @@ public class LineDraw : MonoBehaviour
             }
         }
     }
+
+    public void DrawTempLine()
+    {
+        
+        
+    }
+
+    public void TestAll()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("Xoa diem ve cuoi");
+            currentLine.lineRenderer.positionCount -= 2;
+        }
+    }
+
+
 }

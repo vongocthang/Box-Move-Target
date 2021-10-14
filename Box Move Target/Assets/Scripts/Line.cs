@@ -69,4 +69,12 @@ public class Line : MonoBehaviour
 
         edgeCollider.edgeRadius = width / 2f;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag=="Box" || collision.tag == "Tilemap")
+        {
+            Debug.Log("Khong dc ve");
+        }
+    }
 }
