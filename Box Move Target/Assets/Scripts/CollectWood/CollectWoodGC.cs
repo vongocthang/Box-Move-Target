@@ -54,7 +54,7 @@ public class CollectWoodGC : MonoBehaviour
         }
 
         //Nếu đang đếm mà điều kiện không thỏa mãn nữa thì
-        if (threeSecond > 0 && beginCountTime == false)
+        if (countTime.enabled == true && beginCountTime == false)
         {
             countTime.enabled = false;
             threeSecond = 0;
