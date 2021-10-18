@@ -7,8 +7,6 @@ public class Line : MonoBehaviour
     public LineRenderer lineRenderer;
     public Rigidbody2D rb;
     public EdgeCollider2D edgeCollider;
-    float edgeColliderRadius;
-    //public CircleCollider2D circleCollider;
     float circleColliderRadius;
 
     public int pointsCount = 0;
@@ -18,7 +16,7 @@ public class Line : MonoBehaviour
 
     public void AddPoint(Vector2 newPoint)
     {
-        if(pointsCount>=1 && Vector2.Distance(newPoint, GetLastPoint()) < pointsMinDistance)
+        if (pointsCount >= 1 && Vector2.Distance(newPoint, GetLastPoint()) < pointsMinDistance)
         {
             return;
         }
@@ -36,7 +34,6 @@ public class Line : MonoBehaviour
         CircleCollider2D circleCollider = this.gameObject.AddComponent<CircleCollider2D>();
         circleCollider.offset = newPoint;
         circleCollider.radius = circleColliderRadius;
-        SetCircleColloder(true);
     }
 
     public Vector2 GetLastPoint()
@@ -51,7 +48,7 @@ public class Line : MonoBehaviour
 
     public void UsePhysics(bool usePhysics)
     {
-        Debug.Log("Tat rigidbody");
+        //Debug.Log("Tat rigidbody");
         rb.simulated = usePhysics;
     }
 
@@ -67,15 +64,5 @@ public class Line : MonoBehaviour
 
         edgeCollider.edgeRadius = width / 2f;
         circleColliderRadius = width / 2f;
-    }
-
-    public void SetCircleColloder(bool setIsTrigger)
-    {
-        this.GetComponent<CircleCollider2D>().isTrigger = setIsTrigger;
-    }
-
-    public void SetEdgeCollider(bool setIsTrigger)
-    {
-        edgeCollider.isTrigger = setIsTrigger;
     }
 }

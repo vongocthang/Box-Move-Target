@@ -11,6 +11,7 @@ public class DrawLine : MonoBehaviour
     public float lineWidth;
 
     Line line;
+    public CircleCollider2D circleCollider;
 
     Camera cam;
 
@@ -20,19 +21,41 @@ public class DrawLine : MonoBehaviour
     public Vector2 mousePosition;
     public GameObject penCollider;
 
+    public LayerMask blockLayer;//Dùng khi bắt đầu vẽ
+    int blockLayerIndex;
+    public bool drawing;//Đang vẽ
+    public bool blocked;
+
+    //Các đối tượng cần tắt tác dụng lực khi đang vẽ
+    public Rigidbody2D car;
+    public Rigidbody2D barrier;
+    public Rigidbody2D wheel1, wheel2;
+    //public Rigidbody2D box;
+    public Rigidbody2D wood1, wood2, wood3, wood4, wood5;
+
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+
+        blockLayerIndex = LayerMask.NameToLayer("CantDrawOver");
+
+        Time.timeScale = 5;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if (Input.GetMouseButtonDown(0))
+        BeforeDraw();
+
+        if (drawing == false)
         {
             SetUpPen();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //SetUpPen();
             BeginDraw();
         }
         if (Input.GetMouseButton(0))
@@ -57,40 +80,86 @@ public class DrawLine : MonoBehaviour
         line.SetPointMinDistance(linePointsMinDistance);
         line.SetLineWidth(lineWidth);
 
-        line.SetEdgeCollider(true);
+        Time.timeScale = 1;
     }
 
     public void Draw()
     {
-        line.AddPoint(penPosition);
+        RaycastHit2D hit = Physics2D.CircleCast(penPosition, lineWidth / 2, Vector2.zero, 1f, blockLayer);
+        if (hit && drawing == false)
+        {
+            Debug.Log("Bi chan");
+            blocked = true;
+        }
+        else
+        {
+            //Tắt tác dụng lực khi đang vẽ
+            car.isKinematic = true;
+            
+            barrier.isKinematic = true;
+            wheel1.isKinematic = true;
+            wheel2.isKinematic = true;
+            //wood1.isKinematic = true;
+            //wood2.isKinematic = true;
+            //wood3.isKinematic = true;
+            //wood4.isKinematic = true;
+            //wood5.isKinematic = true;
+
+            drawing = true;
+            line.AddPoint(penPosition);
+            circleCollider.isTrigger = false;
+
+
+        }
     }
 
     public void EndDraw()
     {
-        line.SetCircleColloder(false);
-        line.SetEdgeCollider(false);
+        if (blocked == true)
+        {
+            Destroy(line.gameObject);
+        }
+
+        //Bật lại tác dụng lực khi vẽ xong
+        car.isKinematic = false;
+        barrier.isKinematic = false;
+        wheel1.isKinematic = false;
+        wheel2.isKinematic = false;
+        //wood1.isKinematic = false;
+        //wood2.isKinematic = false;
+        //wood3.isKinematic = false;
+        //wood4.isKinematic = false;
+        //wood5.isKinematic = false;
 
         line.UsePhysics(true);
         line = null;
+
+        circleCollider.isTrigger = true;
+        drawing = false;
+        blocked = false;
+        this.transform.position = new Vector2(0, 10);
+
+
     }
 
     public void SetUpPen()
     {
-        mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-
         this.transform.position = mousePosition;
     }
 
     public void PenFollowMouse()
     {
-        mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         this.transform.position = Vector2.Lerp(this.transform.position, mousePosition, penMoveSpeed*Time.deltaTime);
-
-        penPosition = this.transform.position;
     }
 
     public void PenCollider()
     {
         penCollider.transform.position = this.transform.position;
+    }
+
+    public void BeforeDraw()
+    {
+        mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        penPosition = this.transform.position;
     }
 }
