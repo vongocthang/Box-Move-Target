@@ -16,7 +16,7 @@ public class Line : MonoBehaviour
 
     public void AddPoint(Vector2 newPoint)
     {
-        if (pointsCount >= 1 && Vector2.Distance(newPoint, GetLastPoint()) < pointsMinDistance)
+        if (pointsCount >= 2 && Vector2.Distance(newPoint, GetLastPoint()) < pointsMinDistance)
         {
             return;
         }
