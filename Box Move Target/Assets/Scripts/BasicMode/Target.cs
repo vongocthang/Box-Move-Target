@@ -22,7 +22,7 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Box")
+        if (collision.tag == "BoxCheck")
         {
             Debug.Log("Vao dung vi tri");
             beginCountTime = true;
@@ -32,7 +32,7 @@ public class Target : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Box")
+        if (collision.tag == "BoxCheck")
         {
             beginCountTime = false;
         }

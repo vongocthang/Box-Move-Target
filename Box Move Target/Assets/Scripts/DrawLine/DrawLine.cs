@@ -33,15 +33,12 @@ public class DrawLine : MonoBehaviour
     public Rigidbody2D barrierORbox;
     public Rigidbody2D wheel1, wheel2;
 
+    public GameObject renderMiniCamera;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
-
-        //blockLayerIndex = LayerMask.NameToLayer("CantDrawOver");
-
-        Time.timeScale = 100;
     }
 
     // Update is called once per frame
@@ -51,7 +48,6 @@ public class DrawLine : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Time.timeScale = 1;
             SetUpPen();
             BeginDraw();
         }
@@ -85,6 +81,8 @@ public class DrawLine : MonoBehaviour
             line.SetLineWidth(lineWidth);
 
             penSprite.SetActive(true);
+
+            renderMiniCamera.SetActive(true);
         }
     }
 
@@ -130,6 +128,8 @@ public class DrawLine : MonoBehaviour
 
         circleCollider.isTrigger = true;
         this.transform.position = new Vector2(0, 10);
+
+        renderMiniCamera.SetActive(false);
 
         //Bật lại tác dụng lực khi vẽ xong
         //car.isKinematic = false;

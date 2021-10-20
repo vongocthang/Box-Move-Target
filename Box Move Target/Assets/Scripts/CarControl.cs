@@ -11,6 +11,11 @@ public class CarControl : MonoBehaviour
     public bool moveLeft;
     public bool moveRight;
 
+    //Để xác định con dốc nằm ở bên nào
+    //Từ đó xác định di chuyển trái/phải là xuống dốc
+    public float zRotation;
+    //public float yVelocity;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +26,9 @@ public class CarControl : MonoBehaviour
     void Update()
     {
         Move();
+
+        //Debug.Log(this.transform.rotation.z);
+        
     }
 
     public void MoveLeft()
@@ -42,6 +50,8 @@ public class CarControl : MonoBehaviour
 
     public void Move()
     {
+        zRotation = this.transform.rotation.z;
+
         if (moveLeft == true)
         {
             //Tốc độ tăng dần
@@ -49,7 +59,18 @@ public class CarControl : MonoBehaviour
             {
                 tempMoveSpeed -= 2;
             }
-            rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
+            if (zRotation > 0.02)
+            {
+                Debug.Log("Xuống dốc phải");
+                //yVelocity = -10;
+                //yVelocity *= zRotation;
+            }
+            else
+            {
+                Debug.Log("Tác dụng lực Veloctiy");
+                rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
+            }
+            //rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, yVelocity);
         }
         if (moveRight == true)
         {
@@ -58,7 +79,18 @@ public class CarControl : MonoBehaviour
             {
                 tempMoveSpeed += 2;
             }
-            rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
+            if (zRotation < -0.02)
+            {
+                Debug.Log("Xuống dốc trái");
+                //yVelocity = -10;
+                //yVelocity *= (-zRotation);
+            }
+            else
+            {
+                Debug.Log("Tác dụng lực Veloctiy");
+                rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, 0f);
+            }
+            //rb2D.velocity = new Vector2(tempMoveSpeed * Time.deltaTime, yVelocity);
         }
     }
 }
