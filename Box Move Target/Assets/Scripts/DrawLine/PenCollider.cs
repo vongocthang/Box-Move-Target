@@ -15,7 +15,7 @@ public class PenCollider : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Tilemap" || collision.tag == "Car" 
+        if (collision.tag == "Tilemap" || collision.tag == "Car" || collision.tag == "Line"
             || collision.tag == "Barrier" || collision.tag == "Wheel" || collision.tag == "Box"
             || collision.tag == "Wood")
         {
@@ -28,9 +28,28 @@ public class PenCollider : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+
+        if (collision.tag == "Tilemap" || collision.tag == "Car" || collision.tag == "Line"
+            || collision.tag == "Barrier" || collision.tag == "Wheel" || collision.tag == "Box"
+            || collision.tag == "Wood")
+        {
+            //Debug.Log("Bị chặn bởi " + collision.gameObject.name);
+
+            //if (pen.penMoveSpeed >= 1)
+            //{
+            //    pen.penMoveSpeed = 1f / pen.distance;
+            //}
+            
+            //Làm đối tượng không bị tác dụng lực bởi Pen khi tiếp xúc
+            //collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Tilemap" || collision.tag == "Car"
+        if (collision.tag == "Tilemap" || collision.tag == "Car" || collision.tag == "Line"
             || collision.tag == "Barrier" || collision.tag == "Wheel" || collision.tag == "Box"
             || collision.tag == "Wood")
         {
@@ -44,7 +63,12 @@ public class PenCollider : MonoBehaviour
             else
             {
                 countCollision--;
-                pen.penMoveSpeed = 20f;
+
+                while (pen.penMoveSpeed < 20f)
+                {
+                    pen.penMoveSpeed += 0.1f;
+                }
+                //pen.penMoveSpeed = 20f;
                 //Mở tác dụng lực trở lại
                 collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
             }

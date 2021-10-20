@@ -21,7 +21,9 @@ public class DrawLine : MonoBehaviour
     public float penMoveSpeed;
     public Vector2 penPosition;
     public Vector2 mousePosition;
+    //Đối tượng con-dùng dể xác định va chạm với các đối tượng không đc vẽ xuyên qua
     public GameObject penCollider;
+    public float distance;//Khoảng cách giữa Pen và Mouse
 
     public LayerMask blockLayer;//Dùng khi bắt đầu vẽ
     int blockLayerIndex;
@@ -35,16 +37,20 @@ public class DrawLine : MonoBehaviour
 
     public GameObject renderMiniCamera;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         BeforeDraw();
+        ChangePenSpeed();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -116,6 +122,7 @@ public class DrawLine : MonoBehaviour
                 
             }
 
+            line.gameObject.tag = "Line";
             line.UsePhysics(true);
             countLine++;
             line = null;
@@ -157,5 +164,10 @@ public class DrawLine : MonoBehaviour
     {
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         penPosition = this.transform.position;
+    }
+
+    public void ChangePenSpeed()
+    {
+        distance = Vector2.Distance(penPosition, mousePosition);
     }
 }
