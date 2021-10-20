@@ -21,8 +21,9 @@ public class PenCollider : MonoBehaviour
         {
             Debug.Log("Bị chặn bởi "+collision.gameObject.name);
             countCollision++;
-
-            pen.penMoveSpeed = 1f;
+            pen.penMoveSpeed = 0f;
+            
+            //pen.penMoveSpeed = 2f;
             //Làm đối tượng không bị tác dụng lực bởi Pen khi tiếp xúc
             collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         }
@@ -35,15 +36,10 @@ public class PenCollider : MonoBehaviour
             || collision.tag == "Barrier" || collision.tag == "Wheel" || collision.tag == "Box"
             || collision.tag == "Wood")
         {
-            //Debug.Log("Bị chặn bởi " + collision.gameObject.name);
-
-            //if (pen.penMoveSpeed >= 1)
-            //{
-            //    pen.penMoveSpeed = 1f / pen.distance;
-            //}
-            
-            //Làm đối tượng không bị tác dụng lực bởi Pen khi tiếp xúc
-            //collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+            if (pen.penMoveSpeed < 5f)
+            {
+                pen.penMoveSpeed += 0.5f;
+            }
         }
     }
 
@@ -64,9 +60,9 @@ public class PenCollider : MonoBehaviour
             {
                 countCollision--;
 
-                while (pen.penMoveSpeed < 20f)
+                while (pen.penMoveSpeed < 30f)
                 {
-                    pen.penMoveSpeed += 0.1f;
+                    pen.penMoveSpeed += 0.001f;
                 }
                 //pen.penMoveSpeed = 20f;
                 //Mở tác dụng lực trở lại
